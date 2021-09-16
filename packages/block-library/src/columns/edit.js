@@ -7,7 +7,7 @@ import { get, times } from 'lodash';
 /**
  * WordPress dependencies
  */
-import { __, isRTL } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import {
 	BaseControl,
 	Notice,
@@ -53,8 +53,6 @@ import {
  */
 const ALLOWED_BLOCKS = [ 'core/column' ];
 
-const reductionMethod = isRTL() ? 'reduceRight' : 'reduce';
-
 function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 	const { isStackedOnMobile, verticalAlignment } = attributes;
 
@@ -65,7 +63,7 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 
 	const innerBlockClientIds = getBlockOrder( clientId );
 	const count = innerBlockClientIds.length;
-	const vacantIndexes = innerBlockClientIds[ reductionMethod ](
+	const vacantIndexes = innerBlockClientIds.reduce(
 		( vacants, id, index ) =>
 			getBlockOrder( id ).length ? vacants : [ ...vacants, index ],
 		[]
@@ -137,8 +135,8 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 			];
 		} else {
 			// Removes vacant columns
-			const subtrahend = previousColumns - newColumns;
-			const indexesToRemove = vacantIndexes.slice( -subtrahend );
+			const difference = previousColumns - newColumns;
+			const indexesToRemove = vacantIndexes.slice( -difference );
 			innerBlocks = innerBlocks.filter(
 				( item, index ) => ! indexesToRemove.includes( index )
 			);
