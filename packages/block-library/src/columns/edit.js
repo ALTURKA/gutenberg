@@ -31,6 +31,7 @@ import {
 	createBlocksFromInnerBlocksTemplate,
 	store as blocksStore,
 } from '@wordpress/blocks';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -62,12 +63,20 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 	);
 
 	const innerBlockClientIds = getBlockOrder( clientId );
-	const count = innerBlockClientIds.length;
+	const [ count, setCount ] = useState();
 	const vacantIndexes = innerBlockClientIds.reduce(
 		( vacants, id, index ) =>
 			getBlockOrder( id ).length ? vacants : [ ...vacants, index ],
 		[]
 	);
+
+	// Keeps count synced with actual inner block length an approach that
+	// could avoid this or even having count as state would be nice.
+	useEffect( () => {
+		if ( count !== innerBlockClientIds.length ) {
+			setCount( innerBlockClientIds.length );
+		}
+	}, [ innerBlockClientIds.length, count ] );
 
 	const { updateBlockAttributes, replaceInnerBlocks } = useDispatch(
 		blockEditorStore
@@ -150,6 +159,7 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 		}
 
 		replaceInnerBlocks( clientId, innerBlocks );
+		setCount( innerBlocks.length );
 	};
 
 	const columnsMin = Math.max( 1, count - vacantIndexes.length );
