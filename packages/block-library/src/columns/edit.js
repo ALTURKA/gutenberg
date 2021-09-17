@@ -70,8 +70,8 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 		[]
 	);
 
-	// Keeps count synced with actual inner block length an approach that
-	// could avoid this or even having count as state would be nice.
+	// Keeps count synced with actual inner block length. An approach that
+	// could avoid this not even have count as state would be nice.
 	useEffect( () => {
 		if ( count !== innerBlockClientIds.length ) {
 			setCount( innerBlockClientIds.length );
@@ -208,9 +208,13 @@ function ColumnsEdit( { attributes, setAttributes, clientId } ) {
 					<BaseControl>
 						<RadioGroup
 							label={ __( 'Quantity' ) }
-							onChange={ ( value ) =>
-								updateColumns( count, value )
-							}
+							onChange={ ( value ) => {
+								// Somehow keyboard input is has this fire
+								// twice so this avoids the extra one
+								if ( value !== count ) {
+									updateColumns( count, value );
+								}
+							} }
 							checked={ count }
 						>
 							{ columnsRadioList }
