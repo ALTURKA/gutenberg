@@ -24,7 +24,7 @@ async function tabToColumnsControl() {
 			return (
 				activeElement.tagName === 'INPUT' &&
 				activeElement.attributes.getNamedItem( 'aria-label' ).value ===
-					'Columns'
+					'Quantity'
 			);
 		} );
 	} while ( ! isColumnsControl );
@@ -59,7 +59,7 @@ describe( 'Navigating the block hierarchy', () => {
 		// Tweak the columns count.
 		await openDocumentSettingsSidebar();
 		await page.focus(
-			'.block-editor-block-inspector [aria-label="Columns"][type="number"]'
+			'.block-editor-block-inspector [aria-label="Quantity"][type="number"]'
 		);
 		await page.keyboard.down( 'Shift' );
 		await page.keyboard.press( 'ArrowLeft' );
